@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Mensajes — Guardián 360</title>
+<link rel="icon" href="assets/logo-guardian360.png"/>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--card:#111827;--muted:#1f2937;--text:#f8fafc;--sub:#94a3b8;--blue:#2563eb;--radius:16px;--shadow:0 12px 28px rgba(0,0,0,.35)}
+body{margin:0;background:linear-gradient(#0b1220,#0c1426);color:var(--text);font-family:Inter,system-ui,Segoe UI}
+.nav{position:sticky;top:0;background:rgba(12,18,32,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand img{width:28px;height:28px;border-radius:8px}
+.container{max-width:900px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:var(--muted);cursor:pointer}
+.btn.primary{background:var(--blue)}.btn.ghost{background:transparent}
+.badge{padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px}
+input{flex:1;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:#0d1324;color:#fff}
+</style>
+<script>
+const S={messages:JSON.parse(localStorage.getItem('g360_msgs')||'[]')};
+const $=(q,el=document)=>el.querySelector(q);
+function save(){localStorage.setItem('g360_msgs',JSON.stringify(S.messages));}
+function render(){
+  const box=$("#msgs"); box.innerHTML="";
+  S.messages.forEach(m=>{const d=document.createElement('div');d.style.margin="8px 0";d.innerHTML=`<div class="badge">${m.user}</div><div>${m.text}</div>`;box.appendChild(d);});
+  box.scrollTop=box.scrollHeight;
+}
+function send(){
+  const t=$("#msg").value.trim(); if(!t) return; $("#msg").value="";
+  S.messages.push({ts:Date.now(),user:"Tú",text:t}); save(); render();
+}
+function exportCSV(){
+  const rows=[["fecha","usuario","mensaje"],...S.messages.map(m=>[new Date(m.ts).toISOString(),m.user,m.text])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(",")).join("\n")],{type:"text/csv"}));a.download="g360_mensajes.csv";a.click();URL.revokeObjectURL(a.href);
+}
+window.addEventListener('DOMContentLoaded',render);
+</script>
+</head>
+<body>
+<div class="nav"><div class="inner"><div class="brand"><img src="assets/logo-guardian360.png"><span>Guardián 360</span></div><div class="row"><a class="badge" href="dashboard.html">← Volver</a></div></div></div>
+<main class="container">
+  <section class="card">
+    <h2>Mensajería interna</h2>
+    <div id="msgs" style="height:360px;overflow:auto;background:#0d1324;border-radius:12px;padding:10px"></div>
+    <div class="row" style="margin-top:10px">
+      <input id="msg" placeholder="Escribe un mensaje..." onkeydown="if(event.key==='Enter')send()">
+      <button class="btn primary" onclick="send()">Enviar</button>
+      <button class="btn ghost" onclick="exportCSV()">Exportar</button>
+    </div>
+  </section>
+</main>
+</body>
+</html>
