@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Trabajador — Guardián 360</title>
+<link rel="icon" href="assets/logo-guardian360.png"/>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--card:#111827;--muted:#1f2937;--text:#f8fafc;--sub:#94a3b8;--green:#22c55e;--radius:16px;--shadow:0 12px 28px rgba(0,0,0,.35)}
+body{margin:0;background:linear-gradient(#0b1220,#0c1426);color:var(--text);font-family:Inter,system-ui,Segoe UI}
+.nav{position:sticky;top:0;background:rgba(12,18,32,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand img{width:28px;height:28px;border-radius:8px}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+input,select{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:#0d1324;color:var(--text)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:var(--muted);cursor:pointer}
+.btn.success{background:var(--green)}.btn.ghost{background:transparent}
+.table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:12px;overflow:hidden}th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.badge{padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px}
+</style>
+<script>
+const S={workers:JSON.parse(localStorage.getItem('g360_workers')||'[]')};
+const $=(q,el=document)=>el.querySelector(q);
+function save(){localStorage.setItem('g360_workers',JSON.stringify(S.workers));}
+function saveWorker(){
+  const name=$("#wName").value||"—", role=$("#wRole").value||"—";
+  const fat=+$("#wFatigue").value||0, hr=$("#wHR").value||"";
+  const epp=[...document.querySelectorAll(".epp:checked")].map(x=>x.value).join(", ");
+  const job=$("#wJob").value;
+  S.workers.push({ts:Date.now(),name,role,fat,hr,epp,job}); save(); render(); alert("✅ Ingreso registrado");
+}
+function render(){
+  const tb=$("#tbl tbody"); tb.innerHTML="";
+  S.workers.slice().reverse().forEach(w=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${new Date(w.ts).toLocaleString()}</td><td>${w.name}</td><td>${w.role}</td><td>${w.epp||"—"}</td><td>${w.fat}</td><td>${w.job}</td>`;
+    tb.appendChild(tr);
+  });
+}
+function exportCSV(){
+  const rows=[["fecha","nombre","rol","epp","fatiga","tarea","hr"],...S.workers.map(w=>[new Date(w.ts).toISOString(),w.name,w.role,w.epp,w.fat,w.job,w.hr||""])];
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(",")).join("\n")],{type:"text/csv"}));
+  a.download="g360_workers.csv";a.click();URL.revokeObjectURL(a.href);
+}
+function genQR(){
+  const data=encodeURIComponent(JSON.stringify({job:$("#wJob").value,at:new Date().toISOString()}));
+  const url=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${data}`;
+  const img=$("#qrImg"); img.src=url; img.style.display="block";
+}
+window.addEventListener('DOMContentLoaded',render);
+</script>
+</head>
+<body>
+<div class="nav"><div class="inner"><div class="brand"><img src="assets/logo-guardian360.png" alt="Logo"><span>Guardián 360</span></div><div class="row"><a class="badge" href="dashboard.html">← Volver</a></div></div></div>
+<main class="container">
+  <div class="grid">
+    <section class="card">
+      <h2>Check-in del trabajador</h2>
+      <div class="row">
+        <div style="flex:1"><label>Nombre</label><input id="wName" placeholder="Juan Pérez"></div>
+        <div style="flex:1"><label>Rol</label><input id="wRole" placeholder="Operario / Supervisor"></div>
+      </div>
+      <div class="row">
+        <div style="flex:1"><label>Fatiga (0–10)</label><input id="wFatigue" type="range" min="0" max="10" value="3" oninput="fatOut.textContent=this.value"><div class="badge">Nivel: <b id="fatOut">3</b></div></div>
+        <div style="flex:1"><label>Frecuencia cardíaca</label><input id="wHR" type="number" placeholder="bpm"></div>
+      </div>
+      <div class="row">
+        <div style="flex:1">
+          <label>EPP</label>
+          <div class="row" style="gap:14px">
+            <label><input type="checkbox" class="epp" value="Casco"> Casco</label>
+            <label><input type="checkbox" class="epp" value="Guantes"> Guantes</label>
+            <label><input type="checkbox" class="epp" value="Botas"> Botas</label>
+            <label><input type="checkbox" class="epp" value="Lentes"> Lentes</label>
+          </div>
+        </div>
+        <div style="flex:1">
+          <label>Tipo de tarea</label>
+          <select id="wJob"><option>Altura</option><option>Eléctrica</option><option>Espacio confinado</option><option>Caliente</option></select>
+          <div class="row" style="margin-top:8px"><button class="btn" onclick="genQR()">Generar QR</button></div>
+          <img id="qrImg" style="display:none;margin-top:8px;border-radius:10px;max-width:180px" alt="QR tarea"/>
+        </div>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button class="btn success" onclick="saveWorker()">Registrar ingreso</button>
+        <button class="btn ghost" onclick="exportCSV()">Exportar CSV</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Últimos registros</h2>
+      <table id="tbl" class="table"><thead><tr><th>Fecha</th><th>Nombre</th><th>Rol</th><th>EPP</th><th>Fatiga</th><th>Tarea</th></tr></thead><tbody></tbody></table>
+    </section>
+  </div>
+</main>
+</body>
+</html>
