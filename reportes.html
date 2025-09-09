@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Emergencia — Guardián 360</title>
+<link rel="icon" href="assets/logo-guardian360.png"/>
+<style>
+:root{--bg:#0b1220;--panel:#0f172a;--card:#111827;--muted:#1f2937;--text:#f8fafc;--sub:#94a3b8;--red:#ef4444;--blue:#2563eb;--radius:16px;--shadow:0 12px 28px rgba(0,0,0,.35)}
+body{margin:0;background:linear-gradient(#0b1220,#0c1426);color:var(--text);font-family:Inter,system-ui,Segoe UI}
+.nav{position:sticky;top:0;background:rgba(12,18,32,.85);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}.brand img{width:28px;height:28px;border-radius:8px}
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.1);background:var(--muted);cursor:pointer}
+.btn.danger{background:var(--red)}.btn.ghost{background:transparent}
+.table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:12px;overflow:hidden}th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}.right{text-align:right}
+.badge{padding:4px 8px;border-radius:999px;border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px}
+</style>
+<script>
+const S={incidents:JSON.parse(localStorage.getItem('g360_inc')||'[]')};
+const $=(q,el=document)=>el.querySelector(q);
+function save(){localStorage.setItem('g360_inc',JSON.stringify(S.incidents));}
+async function triggerEmergency(){
+  let loc="sin GPS";
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation?navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:7000}):rej("no geo"));
+    loc=pos.coords.latitude.toFixed(5)+", "+pos.coords.longitude.toFixed(5);
+  }catch(e){}
+  navigator.vibrate?.([160,60,160]);
+  S.incidents.push({ts:Date.now(),type:"Emergencia",loc,sev:["Bajo","Medio","Alto"][Math.floor(Math.random()*3)]});
+  save(); render(); alert("🚨 Emergencia registrada");
+}
+function exportCSV(){
+  const rows=[["fecha","tipo","ubicacion","severidad"],...S.incidents.map(i=>[new Date(i.ts).toISOString(),i.type,i.loc,i.sev])];
+  const csv=rows.map(r=>r.map(x=>`"${String(x).replaceAll('"','""')}"`).join(",")).join("\n");
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="g360_incidentes.csv";a.click();URL.revokeObjectURL(a.href);
+}
+function shareLast(){
+  const i=S.incidents[S.incidents.length-1]; if(!i) return alert("No hay incidentes");
+  const text=`Emergencia Guardián 360\n${new Date(i.ts).toLocaleString()}\nUbicación: ${i.loc}\nSeveridad: ${i.sev}`;
+  if(navigator.share) navigator.share({title:"Emergencia",text}); else {navigator.clipboard.writeText(text); alert("Copiado al portapapeles");}
+}
+function render(){
+  const tb=$("#tbl tbody"); tb.innerHTML="";
+  S.incidents.slice().reverse().forEach(i=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${new Date(i.ts).toLocaleString()}</td><td>${i.type}</td><td>${i.loc}</td><td class="right">${i.sev}</td>`;
+    tb.appendChild(tr);
+  });
+}
+window.addEventListener('DOMContentLoaded',render);
+</script>
+</head>
+<body>
+<div class="nav"><div class="inner"><div class="brand"><img src="assets/logo-guardian360.png" alt="Logo"><span>Guardián 360</span></div><div class="row"><a class="badge" href="dashboard.html">← Volver</a></div></div></div>
+<main class="container">
+  <div class="grid">
+    <section class="card">
+      <h2>Botón de pánico</h2>
+      <p class="badge">Envia alerta con ubicación</p>
+      <div class="row" style="margin-top:10px">
+        <button class="btn danger" onclick="triggerEmergency()">🔴 Activar emergencia</button>
+        <button class="btn" onclick="shareLast()">Compartir último</button>
+        <button class="btn ghost" onclick="exportCSV()">Exportar CSV</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>Incidentes registrados</h2>
+      <table id="tbl" class="table">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Ubicación</th><th class="right">Severidad</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+</main>
+</body>
+</html>
