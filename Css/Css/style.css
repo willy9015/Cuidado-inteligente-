@@ -1,0 +1,104 @@
+/* ===== Guardián 360 • Estilos globales ===== */
+:root{
+  /* Paleta */
+  --bg:#0b1220;        /* fondo */
+  --panel:#0f172a;     /* panel */
+  --card:#111827;      /* tarjetas */
+  --muted:#1f2937;     /* botones neutros */
+  --text:#f8fafc;      /* texto principal */
+  --sub:#94a3b8;       /* texto secundario */
+  --blue:#2563eb;      /* primario */
+  --green:#22c55e;     /* éxito */
+  --orange:#f59e0b;    /* atención */
+  --red:#ef4444;       /* peligro */
+  --radius:16px;
+  --shadow:0 12px 28px rgba(0,0,0,.35);
+}
+
+/* Base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:linear-gradient(#0b1220,#0c1426);
+  color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto;
+}
+a{color:inherit;text-decoration:none}
+
+/* Layout */
+.container{max-width:1100px;margin:0 auto;padding:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Navegación */
+.nav{
+  position:sticky;top:0;z-index:40;
+  background:rgba(12,18,32,.85);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav .inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800}
+.brand img{width:28px;height:28px;border-radius:8px}
+
+/* Componentes */
+.card{
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 16px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.1);background:var(--muted);
+  cursor:pointer;transition:filter .15s ease
+}
+.btn:hover{filter:brightness(1.06)}
+.btn.full{width:100%;justify-content:center}
+.btn.primary{background:var(--blue)}
+.btn.success{background:var(--green)}
+.btn.warning{background:var(--orange)}
+.btn.danger{background:var(--red)}
+.btn.ghost{background:transparent}
+
+.chip{
+  padding:8px 12px;border-radius:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);font-size:14px
+}
+.badge{
+  padding:4px 8px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);color:var(--sub);font-size:12px
+}
+.kpi{font-size:28px;font-weight:800}
+.muted{color:var(--sub)}
+
+/* Formulario */
+input,select,textarea{
+  width:100%;padding:12px;border-radius:12px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0d1324;color:var(--text)
+}
+label{font-size:13px;color:var(--sub)}
+
+/* Tablas */
+.table{
+  width:100%;border-collapse:collapse;background:var(--panel);
+  border-radius:12px;overflow:hidden
+}
+.table th,.table td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left}
+.right{text-align:right}
+
+/* Gráficos */
+canvas{width:100%;height:140px;background:#0d1324;border-radius:12px}
+
+/* Tiles y menú grande */
+.tile{
+  display:flex;align-items:center;gap:14px;
+  background:var(--card);border:1px solid rgba(255,255,255,.06);
+  padding:18px;border-radius:16px
+}
+.icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:rgba(255,255,255,.06)}
+.hero{
+  background:var(--panel);border:1px solid rgba(255,255,255,.06);
+  border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin:16px 0
+}
+.footer{opacity:.7;text-align:center;padding:18px}
+.toast{position:fixed;inset:auto 16px 16px auto;background:#111827;color:#fff;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);display:none}
