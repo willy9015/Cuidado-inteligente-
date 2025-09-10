@@ -1,0 +1,121 @@
+/* ========== Design Tokens ========== */
+:root {
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --text: #1f2937;
+  --muted: #5b6470;
+  --primary: #1f4aa8;
+  --primary-600:#1b4297;
+  --success:#1aa37a;
+  --warning:#f59e0b;
+  --danger:#e03a3e;
+  --info:#2563eb;
+  --border:#e5e7eb;
+  --shadow: 0 6px 18px rgba(22,29,37,.08);
+}
+
+:root[data-theme="dark"]{
+  --bg:#0f1522;
+  --surface:#121a2b;
+  --text:#e5e9f1;
+  --muted:#a7b0bd;
+  --primary:#6ba0ff;
+  --primary-600:#5b8be0;
+  --success:#36d0a0;
+  --warning:#ffb74d;
+  --danger:#ff5d61;
+  --info:#6aa0ff;
+  --border:#243148;
+  --shadow: 0 6px 24px rgba(0,0,0,.45);
+}
+
+/* ========== Base ========== */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text); font:16px/1.6 "Inter",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+/* ========== Topbar ========== */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; gap:1rem; justify-content:space-between;
+  padding:.75rem 1rem; background:var(--surface); border-bottom:1px solid var(--border); box-shadow: var(--shadow);
+}
+.brand{display:flex; align-items:center; gap:.75rem; text-decoration:none; color:inherit;}
+.brand-logo{height:44px; width:auto; display:block;}
+.brand-text small{display:block; color:var(--muted); margin-top:-2px;}
+
+.main-nav .nav-toggle{display:none;}
+.main-nav ul{list-style:none; display:flex; gap:.5rem; padding:0; margin:0;}
+.main-nav a{color:var(--primary); text-decoration:none; font-weight:600; padding:.5rem .75rem; border-radius:8px}
+.main-nav a:hover{background:color-mix(in oklab, var(--primary) 12%, transparent)}
+
+.actions{display:flex; gap:.5rem}
+.btn{border:1px solid var(--border); background:var(--surface); color:var(--text); padding:.5rem .75rem; border-radius:10px; cursor:pointer}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--primary); color:#fff; border-color:transparent}
+.btn.outline{background:transparent; color:var(--primary); border-color:var(--primary)}
+.btn.ghost{background:transparent}
+
+/* ========== Hero ========== */
+.hero{display:grid; place-items:center; padding:4rem 1rem 2rem; background:
+ linear-gradient(180deg, color-mix(in oklab, var(--primary) 12%, transparent), transparent 60%)}
+.hero-content{max-width:980px; width:100%}
+.hero h1{font-size:clamp(1.6rem,3vw,2.4rem); margin:.25rem 0 .5rem}
+.hero .muted{color:var(--muted)}
+.hero-cta{display:flex; gap:.75rem; margin:1rem 0}
+.bullets{display:flex; gap:1rem; padding:0; margin:.5rem 0 0; list-style: '✔  '; color:var(--muted)}
+
+/* ========== Layout ========== */
+.container{max-width:1100px; margin:auto; padding:1rem}
+.grid{display:grid; gap:1rem}
+.grid.quick{grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); padding:1rem}
+.grid.cols-2-sm{grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:.75rem}
+.row{display:flex; align-items:center; gap:.75rem}
+.row.wrap{flex-wrap:wrap}
+.gap{gap:.5rem}
+.flex{flex:1}
+
+.panel{margin:1.25rem 0}
+.panel-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:.5rem}
+.panel h2{margin:.25rem 0}
+.link{text-decoration:none; color:inherit}
+
+/* ========== Cards / Chips / Table ========== */
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1rem; box-shadow:var(--shadow);
+}
+.card h3{margin:0 0 .25rem}
+.chip{background:color-mix(in oklab, var(--primary) 8%, var(--surface)); border:1px solid var(--border); color:var(--text);
+  padding:.4rem .6rem; border-radius:999px}
+
+.table{width:100%; border-collapse:collapse; overflow:auto}
+.table th,.table td{border-bottom:1px solid var(--border); padding:.6rem .5rem}
+.table th{text-align:left; color:var(--muted); font-weight:600}
+
+/* ========== Inputs ========== */
+.input{width:100%; padding:.6rem .7rem; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:10px}
+.stack{display:flex; flex-direction:column; gap:.35rem}
+
+/* ========== KPIs ========== */
+.kpi-grid{display:grid; gap:1rem; grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.kpi{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:.75rem; box-shadow:var(--shadow)}
+.kpi-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:.25rem}
+.badge{padding:.2rem .5rem; border-radius:999px; font-weight:700; font-size:.8rem; color:#fff}
+.badge.success{background:var(--success)} .badge.warning{background:var(--warning)}
+.badge.danger{background:var(--danger)} .badge.info{background:var(--info)}
+.list{padding-left:1rem; margin:.25rem 0}
+.list.compact li{margin:.15rem 0}
+
+/* ========== Footer ========== */
+.footer{margin-top:2rem; padding:1rem; text-align:center; background:var(--surface); border-top:1px solid var(--border)}
+
+/* ========== Responsive Nav ========== */
+@media (max-width: 920px){
+  .main-nav .nav-toggle{display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--border);
+    background:transparent; border-radius:10px; padding:.4rem .6rem}
+  .main-nav ul{position:absolute; right:1rem; top:64px; background:var(--surface); border:1px solid var(--border);
+    box-shadow:var(--shadow); padding:.5rem; border-radius:12px; display:none; flex-direction:column; min-width:220px}
+  .main-nav ul.open{display:flex}
+}
