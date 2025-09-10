@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#1f4aa8" />
+  <title>PRISMA — Seguridad Industrial · ISO 45001</title>
+  <link rel="preload" href="logo-prisma.png" as="image" imagesizes="(max-width:600px) 120px, 180px" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- Top Bar -->
+  <header class="topbar" role="banner">
+    <a class="brand" href="#" aria-label="PRISMA Home">
+      <img class="brand-logo" src="logo-prisma.png" alt="Logo PRISMA" />
+      <div class="brand-text">
+        <strong>PRISMA</strong>
+        <small data-i18n="subtitle">Seguridad Industrial · ISO 45001</small>
+      </div>
+    </a>
+
+    <nav class="main-nav" aria-label="Primary">
+      <button class="nav-toggle" aria-expanded="false" aria-controls="menu">☰</button>
+      <ul id="menu">
+        <li><a href="#dashboard" data-i18n="nav.dashboard">Dashboard</a></li>
+        <li><a href="#worker" data-i18n="nav.worker">Trabajador</a></li>
+        <li><a href="#training" data-i18n="nav.training">Entrenamiento</a></li>
+        <li><a href="#sensors" data-i18n="nav.sensors">Sensores</a></li>
+        <li><a href="#reports" data-i18n="nav.reports">Reportes</a></li>
+        <li><a href="#messages" data-i18n="nav.messages">Mensajes</a></li>
+        <li><a href="#auth" data-i18n="nav.signin">Ingresar</a></li>
+      </ul>
+    </nav>
+
+    <div class="actions">
+      <button id="langBtn" class="btn ghost" aria-label="Language">ES</button>
+      <button id="themeBtn" class="btn ghost" aria-label="Theme">🌞/🌚</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" id="home">
+    <div class="hero-content">
+      <h1 data-i18n="hero.title">Seguridad inteligente para cero incidentes</h1>
+      <p class="muted" data-i18n="hero.body">
+        Checklists, reportes, mapa de riesgos, botón de pánico, sensores y capacitación con IA en una sola plataforma 100% web y móvil.
+      </p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#dashboard" data-i18n="cta.opendashboard">Abrir Dashboard</a>
+        <a class="btn outline" href="#auth" data-i18n="cta.create">Crear cuenta</a>
+      </div>
+      <ul class="bullets">
+        <li>ISO 45001</li>
+        <li data-i18n="hero.offline">Modo offline</li>
+        <li data-i18n="hero.export">Exportación PDF/Excel</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Quick Actions -->
+  <section class="grid quick">
+    <a class="card link" href="#panic">
+      <h3>🆘 <span data-i18n="quick.panic">Botón de pánico (GPS)</span></h3>
+      <p class="muted" data-i18n="quick.panicDesc">Alerta inmediata a supervisores con geolocalización.</p>
+    </a>
+    <a class="card link" href="#training">
+      <h3>🎧 <span data-i18n="quick.micro">Microcursos con voz IA</span></h3>
+      <p class="muted" data-i18n="quick.microDesc">Capacitación breve, evaluaciones y certificados.</p>
+    </a>
+    <a class="card link" href="#sensors">
+      <h3>🧪 <span data-i18n="quick.sensors">Sensores en tiempo real</span></h3>
+      <p class="muted" data-i18n="quick.sensorsDesc">Lecturas, umbrales, alertas e historial.</p>
+    </a>
+  </section>
+
+  <!-- Sections -->
+  <main class="container">
+    <!-- Dashboard -->
+    <section id="dashboard" class="panel">
+      <header class="panel-head">
+        <h2>Dashboard</h2>
+        <a class="btn small" href="tablero.html" data-i18n="buttons.openFull">Abrir completo</a>
+      </header>
+
+      <div class="kpi-grid">
+        <article class="kpi">
+          <div class="kpi-head">
+            <h4 data-i18n="kpi.incidents">Incidentes hoy</h4><span class="badge danger">4</span>
+          </div>
+          <div class="kpi-body"><canvas id="kpiIncidents" width="320" height="80" aria-label="Incidentes"></canvas></div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-head">
+            <h4 data-i18n="kpi.compliance">% Cumplimiento</h4><span class="badge success">92%</span>
+          </div>
+          <div class="kpi-body"><canvas id="kpiCompliance" width="320" height="80" aria-label="Cumplimiento"></canvas></div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-head">
+            <h4 data-i18n="kpi.training">Capacitaciones</h4><span class="badge info">18</span>
+          </div>
+          <div class="kpi-body"><canvas id="kpiTraining" width="320" height="80" aria-label="Capacitaciones"></canvas></div>
+        </article>
+
+        <article class="kpi">
+          <div class="kpi-head">
+            <h4 data-i18n="kpi.audit">Auditoría ISO 45001</h4><span class="badge warning">En curso</span>
+          </div>
+          <ul class="list compact">
+            <li>✔ Liderazgo</li>
+            <li>✔ Peligros</li>
+            <li>✔ Cambios</li>
+            <li>…</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <!-- Panic -->
+    <section id="panic" class="panel">
+      <header class="panel-head"><h2 data-i18n="panic.title">Emergencia</h2></header>
+      <div class="card">
+        <p data-i18n="panic.desc">Alerta inmediata a supervisores con ubicación y registro automático del incidente.</p>
+        <div class="row">
+          <button class="btn danger" id="panicBtn" data-i18n="panic.button">Activar botón de pánico</button>
+          <output id="panicOut" class="muted" aria-live="polite"></output>
+        </div>
+      </div>
+    </section>
+
+    <!-- Training -->
+    <section id="training" class="panel">
+      <header class="panel-head"><h2 data-i18n="training.title">Capacitación</h2></header>
+      <div class="grid">
+        <article class="card">
+          <h3 data-i18n="training.micro">Microcursos con voz IA</h3>
+          <p class="muted" data-i18n="training.microDesc">Lecciones cortas, evaluaciones y certificados automáticos.</p>
+          <div class="row">
+            <button class="btn primary" data-i18n="training.start">Iniciar</button>
+            <button class="btn" data-i18n="training.catalog">Ver catálogo</button>
+          </div>
+        </article>
+        <article class="card">
+          <h3 data-i18n="training.chat">Chat de práctica</h3>
+          <p class="muted" data-i18n="training.chatDesc">Haz preguntas sobre procedimientos y EPP.</p>
+          <div class="row">
+            <input class="input flex" type="text" placeholder="¿Cómo uso el arnés?" aria-label="Pregunta" />
+            <button class="btn" data-i18n="buttons.ask">Preguntar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Sensors -->
+    <section id="sensors" class="panel">
+      <header class="panel-head"><h2 data-i18n="sensors.title">Sensores</h2></header>
+      <div class="card">
+        <p class="muted" data-i18n="sensors.desc">Lecturas, umbrales y alertas. Exportación de historial.</p>
+        <div class="row wrap gap">
+          <div class="chip">CO₂ <strong>420 ppm</strong></div>
+          <div class="chip">Temp <strong>24 °C</strong></div>
+          <div class="chip">Ruido <strong>72 dB</strong></div>
+          <div class="chip">Vibración <strong>Baja</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Reports -->
+    <section id="reports" class="panel">
+      <header class="panel-head"><h2 data-i18n="reports.title">Reportes</h2></header>
+      <div class="card">
+        <div class="row">
+          <button class="btn" data-i18n="reports.new">Nuevo reporte</button>
+          <button class="btn" data-i18n="reports.audit">Auditoría ISO (PDF)</button>
+          <button class="btn" data-i18n="reports.export">Exportar Excel</button>
+        </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th data-i18n="tbl.date">Fecha</th>
+              <th data-i18n="tbl.area">Área</th>
+              <th data-i18n="tbl.type">Tipo</th>
+              <th data-i18n="tbl.status">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>2025-03-10</td><td>Producción</td><td>Casi accidente</td><td>Abierto</td></tr>
+            <tr><td>2025-03-08</td><td>Mantenimiento</td><td>Incidente</td><td>Cerrado</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Messages -->
+    <section id="messages" class="panel">
+      <header class="panel-head"><h2 data-i18n="messages.title">Mensajes</h2></header>
+      <div class="card">
+        <div class="row">
+          <input class="input flex" type="text" placeholder="Mensaje a equipo…" aria-label="Mensaje" />
+          <button class="btn primary" data-i18n="buttons.send">Enviar</button>
+        </div>
+        <ul class="list">
+          <li>Supervisor — “Recordar check de EPP antes de ingreso.”</li>
+          <li>HSE — “Simulacro 10:30 en patio norte.”</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Auth -->
+    <section id="auth" class="panel">
+      <header class="panel-head"><h2 data-i18n="auth.title">Ingresar</h2></header>
+      <div class="card">
+        <form class="grid cols-2-sm" onsubmit="event.preventDefault(); alert('Demo: login');">
+          <label class="stack"><span>Email</span><input class="input" type="email" required /></label>
+          <label class="stack"><span data-i18n="auth.password">Contraseña</span><input class="input" type="password" required /></label>
+          <button class="btn primary" type="submit" data-i18n="auth.login">Iniciar sesión</button>
+          <button class="btn" type="button" data-i18n="auth.google">Continuar con Google</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="y"></span> PRISMA — <span data-i18n="footer.rights">Seguridad e Higiene</span></p>
+  </footer>
+
+  <!-- ===== Scripts ===== -->
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Mobile nav
+    const navBtn = document.querySelector('.nav-toggle');
+    const menu = document.getElementById('menu');
+    navBtn.addEventListener('click', () => {
+      const open = navBtn.getAttribute('aria-expanded') === 'true';
+      navBtn.setAttribute('aria-expanded', String(!open));
+      menu.classList.toggle('open');
+    });
+
+    // Theme
+    const themeBtn = document.getElementById('themeBtn');
+    const setTheme = (t) => { document.documentElement.dataset.theme = t; localStorage.setItem('theme', t); };
+    const pref = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(pref);
+    themeBtn.addEventListener('click', () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+    // i18n
+    const i18n = {
+      es: {
+        subtitle:"Seguridad Industrial · ISO 45001",
+        "nav.dashboard":"Dashboard","nav.worker":"Trabajador","nav.training":"Entrenamiento","nav.sensors":"Sensores","nav.reports":"Reportes","nav.messages":"Mensajes","nav.signin":"Ingresar",
+        "hero.title":"Seguridad inteligente para cero incidentes","hero.body":"Checklists, reportes, mapa de riesgos, botón de pánico, sensores y capacitación con IA en una sola plataforma 100% web y móvil.",
+        "hero.offline":"Modo offline","hero.export":"Exportación PDF/Excel",
+        "cta.opendashboard":"Abrir Dashboard","cta.create":"Crear cuenta",
+        "quick.panic":"Botón de pánico (GPS)","quick.panicDesc":"Alerta inmediata a supervisores con geolocalización.",
+        "quick.micro":"Microcursos con voz IA","quick.microDesc":"Capacitación breve, evaluaciones y certificados.",
+        "quick.sensors":"Sensores en tiempo real","quick.sensorsDesc":"Lecturas, umbrales, alertas e historial.",
+        "kpi.incidents":"Incidentes hoy","kpi.compliance":"% Cumplimiento","kpi.training":"Capacitaciones","kpi.audit":"Auditoría ISO 45001",
+        "buttons.openFull":"Abrir completo","buttons.ask":"Preguntar","buttons.send":"Enviar",
+        "panic.title":"Emergencia","panic.desc":"Alerta inmediata a supervisores con ubicación y registro automático del incidente.","panic.button":"Activar botón de pánico",
+        "training.title":"Capacitación","training.micro":"Microcursos con voz IA","training.microDesc":"Lecciones cortas, evaluaciones y certificados automáticos.","training.start":"Iniciar","training.catalog":"Ver catálogo","training.chat":"Chat de práctica","training.chatDesc":"Haz preguntas sobre procedimientos y EPP.",
+        "sensors.title":"Sensores","sensors.desc":"Lecturas, umbrales y alertas. Exportación de historial.",
+        "reports.title":"Reportes","reports.new":"Nuevo reporte","reports.audit":"Auditoría ISO (PDF)","reports.export":"Exportar Excel",
+        "tbl.date":"Fecha","tbl.area":"Área","tbl.type":"Tipo","tbl.status":"Estado",
+        "messages.title":"Mensajes","auth.title":"Ingresar","auth.password":"Contraseña","auth.login":"Iniciar sesión","auth.google":"Continuar con Google",
+        "footer.rights":"Seguridad e Higiene"
+      },
+      en: {
+        subtitle:"Industrial Safety · ISO 45001",
+        "nav.dashboard":"Dashboard","nav.worker":"Worker","nav.training":"Training","nav.sensors":"Sensors","nav.reports":"Reports","nav.messages":"Messages","nav.signin":"Sign in",
+        "hero.title":"Smart safety for zero incidents","hero.body":"Checklists, reports, risk map, panic button, sensors and AI training in a single web & mobile platform.",
+        "hero.offline":"Offline mode","hero.export":"PDF/Excel export",
+        "cta.opendashboard":"Open Dashboard","cta.create":"Create account",
+        "quick.panic":"Panic button (GPS)","quick.panicDesc":"Instant alert to supervisors with geolocation.",
+        "quick.micro":"AI voice micro-courses","quick.microDesc":"Short training, quizzes and certificates.",
+        "quick.sensors":"Real-time sensors","quick.sensorsDesc":"Readings, thresholds, alerts and history.",
+        "kpi.incidents":"Incidents today","kpi.compliance":"% Compliance","kpi.training":"Trainings","kpi.audit":"ISO 45001 audit",
+        "buttons.openFull":"Open full","buttons.ask":"Ask","buttons.send":"Send",
+        "panic.title":"Emergency","panic.desc":"Immediate alert to supervisors with location and automatic logging.","panic.button":"Trigger panic button",
+        "training.title":"Training","training.micro":"AI voice micro-courses","training.microDesc":"Short lessons, quizzes and auto certificates.","training.start":"Start","training.catalog":"View catalog","training.chat":"Practice chat","training.chatDesc":"Ask about procedures and PPE.",
+        "sensors.title":"Sensors","sensors.desc":"Readings, thresholds and alerts. Export history.",
+        "reports.title":"Reports","reports.new":"New report","reports.audit":"ISO Audit (PDF)","reports.export":"Export Excel",
+        "tbl.date":"Date","tbl.area":"Area","tbl.type":"Type","tbl.status":"Status",
+        "messages.title":"Messages","auth.title":"Sign in","auth.password":"Password","auth.login":"Log in","auth.google":"Continue with Google",
+        "footer.rights":"Safety & Health"
+      }
+    };
+
+    const langBtn = document.getElementById('langBtn');
+    const setLang = (l) => {
+      localStorage.setItem('lang', l);
+      langBtn.textContent = l.toUpperCase();
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[l][key]) el.textContent = i18n[l][key];
+      });
+      document.documentElement.lang = l;
+    };
+    setLang(localStorage.getItem('lang') || 'es');
+    langBtn.addEventListener('click', () => setLang(document.documentElement.lang === 'es' ? 'en' : 'es'));
+
+    // Panic demo with Geolocation
+    const panicBtn = document.getElementById('panicBtn');
+    const panicOut = document.getElementById('panicOut');
+    if (panicBtn) {
+      panicBtn.addEventListener('click', async () => {
+        panicOut.textContent = '…';
+        if (!('geolocation' in navigator)) { panicOut.textContent = 'Geolocation not supported'; return; }
+        navigator.geolocation.getCurrentPosition(
+          pos => {
+            const { latitude, longitude } = pos.coords;
+            panicOut.textContent = `OK: ${latitude.toFixed(5)}, ${longitude.toFixed(5)} (demo)`;
+            // TODO: POST a /api/panic con coords + timestamp
+          },
+          err => panicOut.textContent = 'Error: ' + err.message,
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      });
+    }
+
+    // Tiny sparkline charts (no libs)
+    function sparkline(canvasId, values, color) {
+      const c = document.getElementById(canvasId); if (!c) return;
+      const ctx = c.getContext('2d'); const w=c.width, h=c.height;
+      ctx.clearRect(0,0,w,h); ctx.lineWidth=2; ctx.strokeStyle=color;
+      const max=Math.max(...values), min=Math.min(...values);
+      ctx.beginPath();
+      values.forEach((v,i)=>{
+        const x = (i/(values.length-1))*w;
+        const y = h - ((v-min)/(max-min||1))*h;
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      });
+      ctx.stroke();
+    }
+    sparkline('kpiIncidents',[1,2,1,0,3,4,2],'#e03a3e');
+    sparkline('kpiCompliance',[88,90,91,92,89,93,92],'#1aa37a');
+    sparkline('kpiTraining',[6,8,10,9,12,15,18],'#2563eb');
+  </script>
+</body>
+</html>
