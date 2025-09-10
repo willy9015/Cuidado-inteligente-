@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRISMA · Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="assets/logo-prisma.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    .grid{display:grid;gap:1rem}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media (max-width: 900px){.grid-2,.grid-3{grid-template-columns:1fr}}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{padding:.75rem;border-bottom:1px solid #e5e7eb;text-align:left;font-size:.95rem}
+    .pill{display:inline-block;padding:.2rem .55rem;border-radius:999px;font-size:.75rem}
+    .pill.green{background:#dcfce7;color:#166534}
+    .pill.yellow{background:#fef9c3;color:#854d0e}
+    .pill.red{background:#fee2e2;color:#991b1b}
+    .toolbar{display:flex;gap:.5rem;flex-wrap:wrap}
+    .input,select{border:1px solid #e5e7eb;padding:.55rem .7rem;border-radius:8px;font:inherit}
+    .section-title{margin:1.25rem 0 .5rem 0}
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index.html" class="brand">
+      <img src="assets/logo-prisma.png" alt="Logo PRISMA" class="logo" />
+      <div class="brand-text">
+        <strong>PRISMA</strong>
+        <span>Seguridad Industrial · ISO 45001</span>
+      </div>
+    </a>
+    <nav>
+      <button id="navToggle" class="nav-toggle">☰</button>
+      <ul id="navList" class="nav-list">
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="entrenamiento.html">Entrenamiento</a></li>
+        <li><a href="sensores.html">Sensores</a></li>
+        <li><a href="reportes.html">Reportes</a></li>
+        <li><a href="mensajes.html">Mensajes</a></li>
+        <li><a href="auth.html" class="btn btn-sm">Salir</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main class="container" style="padding:1.25rem 0 2rem">
+  <!-- KPIs -->
+  <section class="kpi">
+    <h2 class="section-title">Indicadores clave</h2>
+    <div class="kpi-grid">
+      <div class="kpi-item">
+        <div class="kpi-label">Incidentes (hoy)</div>
+        <div class="kpi-value" id="kpiIncidentes">0</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Cumplimiento checklist</div>
+        <div class="kpi-value" id="kpiCumplimiento">94%</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Capacitaciones</div>
+        <div class="kpi-value" id="kpiCaps">87</div>
+      </div>
+      <div class="kpi-item">
+        <div class="kpi-label">Alertas IA</div>
+        <div class="kpi-value" id="kpiIA">3</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gráficas -->
+  <section class="grid grid-2">
+    <div class="card">
+      <h3>Incidentes últimos 30 días</h3>
+      <canvas id="chartIncidentes" height="120"></canvas>
+    </div>
+    <div class="card">
+      <h3>Uso correcto de EPP (%)</h3>
+      <canvas id="chartEPP" height="120"></canvas>
+    </div>
+  </section>
+
+  <!-- Alta rápida + Tabla -->
+  <section class="card" style="margin-top:1rem">
+    <div class="toolbar" style="justify-content:space-between;align-items:center;margin-bottom:.5rem">
+      <h3>Incidentes</h3>
+      <div class="toolbar">
+        <button id="btnExport" class="btn btn-ghost btn-sm">Exportar CSV</button>
+        <a href="reportes.html" class="btn btn-sm">Ver reportes</a>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin:.5rem 0 1rem">
+      <input id="inNombre" class="input" placeholder="Nombre" />
+      <select id="inSeveridad">
+        <option value="Baja">Baja</option>
+        <option value="Media">Media</option>
+        <option value="Alta">Alta</option>
+      </select>
+      <div class="toolbar">
+        <button id="btnAgregar" class="btn btn-lg">Agregar incidente</button>
+      </div>
+    </div>
+
+    <div style="overflow:auto">
+      <table class="table" id="tablaIncidentes">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Nombre</th>
+            <th>Severidad</th>
+            <th>Área</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody><!-- filas dinámicas --></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Panel trabajador -->
+  <section class="grid grid-2" style="margin-top:1rem">
+    <div class="card">
+      <h3>Ingreso de trabajador</h3>
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <input id="twNombre" class="input" placeholder="Juan Pérez" />
+        <select id="twRol">
+          <option>Operario</option>
+          <option>Supervisor</option>
+          <option>Contratista</option>
+        </select>
+        <label>Fatiga (0-10) <input id="twFatiga" type="range" min="0" max="10" value="3" class="input" /></label>
+        <select id="twTarea">
+          <option>Altura</option>
+          <option>Espacio confinado</option>
+          <option>Eléctrico</option>
+          <option>Caliente</option>
+        </select>
+      </div>
+      <div class="toolbar" style="margin-top:.75rem">
+        <label><input type="checkbox" id="eppCasco"> Casco</label>
+        <label><input type="checkbox" id="eppGuantes"> Guantes</label>
+        <label><input type="checkbox" id="eppBotas"> Botas</label>
+        <label><input type="checkbox" id="eppLentes"> Lentes</label>
+      </div>
+      <div class="toolbar" style="margin-top:1rem">
+        <button id="btnRegistrar" class="btn">Registrar ingreso</button>
+        <button id="btnQR" class="btn btn-ghost">Generar QR</button>
+      </div>
+      <small style="display:block;margin-top:.5rem;color:#6b7280">Los registros quedan en tu navegador (localStorage) para demo.</small>
+    </div>
+
+    <div class="card">
+      <h3>Últimos ingresos</h3>
+      <table class="table" id="tablaIngresos">
+        <thead>
+          <tr><th>Fecha</th><th>Nombre</th><th>Rol</th><th>EPP</th><th>Fatiga</th><th>Tarea</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <small>© <span id="yy"></span> PRISMA — Seguridad e Higiene</small>
+    <nav class="footer-nav">
+      <a href="index.html">Inicio</a>
+      <a href="entrenamiento.html">Capacitación</a>
+      <a href="reportes.html">Reportes</a>
+      <a href="auth.html">Ingresar</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Nav responsive
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('navList').classList.toggle('open');
+  });
+  document.getElementById('yy').textContent = new Date().getFullYear();
+
+  // --- Datos demo persistentes ---
+  const LS_INC = 'prisma_incidentes';
+  const LS_IN  = 'prisma_ingresos';
+
+  const seedIfEmpty = () => {
+    if (!localStorage.getItem(LS_INC)) {
+      const hoy = new Date();
+      const days = Array.from({length:30}, (_,i)=> {
+        const d = new Date(hoy); d.setDate(hoy.getDate()- (29-i));
+        return { fecha: d.toISOString().slice(0,10), count: Math.floor(Math.random()*3) };
+      });
+      localStorage.setItem(LS_INC, JSON.stringify({ serie: days, filas: [] }));
+    }
+    if (!localStorage.getItem(LS_IN)) localStorage.setItem(LS_IN, JSON.stringify([]));
+  };
+  seedIfEmpty();
+
+  // --- KPIs & Charts ---
+  const incStore = JSON.parse(localStorage.getItem(LS_INC));
+  const kpiInc = incStore.filas?.filter(f=>f.fecha.startsWith(new Date().toISOString().slice(0,10))).length || 0;
+  document.getElementById('kpiIncidentes').textContent = kpiInc;
+
+  const ctx1 = document.getElementById('chartIncidentes');
+  const ctx2 = document.getElementById('chartEPP');
+
+  new Chart(ctx1, {
+    type:'bar',
+    data:{
+      labels: incStore.serie.map(p=>p.fecha.slice(5)),
+      datasets:[{label:'Incidentes', data: incStore.serie.map(p=>p.count), borderWidth:1, backgroundColor:'#60a5fa'}]
+    },
+    options:{responsive:true, scales:{y:{beginAtZero:true}}}
+  });
+
+  new Chart(ctx2, {
+    type:'line',
+    data:{
+      labels:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],
+      datasets:[
+        {label:'Cascos',  data:[92,95,93,96,94,97,95], tension:.3, borderColor:'#2563eb'},
+        {label:'Guantes', data:[88,90,91,92,90,93,94], tension=.3, borderColor:'#10b981'}
+      ]
+    },
+    options:{responsive:true}
+  });
+
+  // --- Tabla Incidentes ---
+  const tbodyInc = document.querySelector('#tablaIncidentes tbody');
+
+  function renderIncidentes(){
+    const st = JSON.parse(localStorage.getItem(LS_INC));
+    tbodyInc.innerHTML = '';
+    (st.filas||[]).slice().reverse().forEach((r,idx)=>{
+      const tr = document.createElement('tr');
+      const pillCls = r.severidad==='Alta'?'red':(r.severidad==='Media'?'yellow':'green');
+      tr.innerHTML = `
+        <td>${r.fecha.slice(0,16).replace('T',' ')}</td>
+        <td>${r.nombre}</td>
+        <td><span class="pill ${pillCls}">${r.severidad}</span></td>
+        <td>${r.area||'General'}</td>
+        <td><button class="btn btn-ghost btn-sm" data-i="${idx}">Borrar</button></td>`;
+      tbodyInc.appendChild(tr);
+    });
+  }
+  renderIncidentes();
+
+  document.getElementById('btnAgregar').addEventListener('click', ()=>{
+    const nombre = document.getElementById('inNombre').value.trim() || 'Sin nombre';
+    const sev = document.getElementById('inSeveridad').value;
+    const st = JSON.parse(localStorage.getItem(LS_INC));
+    st.filas.push({fecha:new Date().toISOString(), nombre, severidad:sev, area:'General'});
+    localStorage.setItem(LS_INC, JSON.stringify(st));
+    document.getElementById('kpiIncidentes').textContent = (+document.getElementById('kpiIncidentes').textContent)+1;
+    renderIncidentes();
+  });
+
+  tbodyInc.addEventListener('click', (e)=>{
+    if(e.target.tagName==='BUTTON'){
+      const idx = +e.target.dataset.i;
+      const st = JSON.parse(localStorage.getItem(LS_INC));
+      st.filas.splice(st.filas.length-1-idx,1); // por reverse visual
+      localStorage.setItem(LS_INC, JSON.stringify(st));
+      renderIncidentes();
+    }
+  });
+
+  document.getElementById('btnExport').addEventListener('click', ()=>{
+    const st = JSON.parse(localStorage.getItem(LS_INC));
+    const rows = [['fecha','nombre','severidad','area'], ...st.filas.map(r=>[r.fecha,r.nombre,r.severidad,r.area])];
+    const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'incidentes_prisma.csv';
+    a.click();
+  });
+
+  // --- Ingresos de trabajador ---
+  const tbodyIng = document.querySelector('#tablaIngresos tbody');
+
+  function renderIngresos(){
+    const lista = JSON.parse(localStorage.getItem(LS_IN));
+    tbodyIng.innerHTML = '';
+    lista.slice().reverse().forEach(r=>{
+      const epp = ['Casco','Guantes','Botas','Lentes'].filter((x,i)=>r.epp[i]).join(', ') || '—';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${r.fecha.slice(0,16).replace('T',' ')}</td>
+                      <td>${r.nombre}</td><td>${r.rol}</td>
+                      <td>${epp}</td><td>${r.fatiga}</td><td>${r.tarea}</td>`;
+      tbodyIng.appendChild(tr);
+    });
+  }
+  renderIngresos();
+
+  document.getElementById('btnRegistrar').addEventListener('click', ()=>{
+    const nombre = document.getElementById('twNombre').value.trim() || 'Sin nombre';
+    const rol = document.getElementById('twRol').value;
+    const fatiga = document.getElementById('twFatiga').value;
+    const tarea = document.getElementById('twTarea').value;
+    const epp = [
+      document.getElementById('eppCasco').checked,
+      document.getElementById('eppGuantes').checked,
+      document.getElementById('eppBotas').checked,
+      document.getElementById('eppLentes').checked
+    ];
+    const lista = JSON.parse(localStorage.getItem(LS_IN));
+    lista.push({fecha:new Date().toISOString(), nombre, rol, fatiga, tarea, epp});
+    localStorage.setItem(LS_IN, JSON.stringify(lista));
+    renderIngresos();
+  });
+
+  // QR (demo)
+  document.getElementById('btnQR').addEventListener('click', ()=>{
+    alert('Demo QR: aquí se integrará la generación de QR para permisos de trabajo.');
+  });
+</script>
+</body>
+</html>
