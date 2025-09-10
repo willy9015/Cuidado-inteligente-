@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PRISMA — Seguridad Industrial · ISO 45001</title>
+  <meta name="description" content="PRISMA: seguridad inteligente con checklists, reportes, sensores, capacitación con IA y auditoría ISO 45001." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="assets/logo-prisma.png" />
+</head>
+<body>
+  <!-- Header / Navbar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="PRISMA Inicio">
+        <img src="assets/logo-prisma.png" alt="Logo PRISMA" class="logo" />
+        <div class="brand-text">
+          <strong>PRISMA</strong>
+          <span>Seguridad Industrial · ISO 45001</span>
+        </div>
+      </a>
+
+      <nav class="nav" aria-label="Principal">
+        <button class="nav-toggle" aria-expanded="false" aria-label="Abrir menú">☰</button>
+        <ul class="nav-list">
+          <li><a href="dashboard.html">Dashboard</a></li>
+          <li><a href="trabajador.html">Trabajador</a></li>
+          <li><a href="entrenamiento.html">Entrenamiento</a></li>
+          <li><a href="sensores.html">Sensores</a></li>
+          <li><a href="reportes.html">Reportes</a></li>
+          <li><a href="mensajes.html">Mensajes</a></li>
+          <li><a class="btn btn-sm" href="auth.html">Ingresar</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <h1>Seguridad inteligente para <span class="accent">cero incidentes</span></h1>
+        <p>Checklists, reportes, mapa de riesgos, botón de pánico, sensores y capacitación con IA en una sola plataforma 100% web y móvil.</p>
+        <div class="hero-actions">
+          <a class="btn btn-lg" href="dashboard.html">Abrir Dashboard</a>
+          <a class="btn btn-lg btn-ghost" href="auth.html">Crear cuenta</a>
+        </div>
+        <ul class="badges">
+          <li>ISO 45001</li>
+          <li>Modo offline</li>
+          <li>Exportación PDF/Excel</li>
+        </ul>
+      </div>
+      <div class="hero-card">
+        <h3>Funciones rápidas</h3>
+        <a class="quick" href="emergencia.html">🚨 Botón de pánico (GPS)</a>
+        <a class="quick" href="entrenamiento.html">🎧 Microcursos con voz IA</a>
+        <a class="quick" href="sensores.html">🌡️ Sensores en tiempo real</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="features container">
+    <article class="card">
+      <h3>Emergencia</h3>
+      <p>Alerta inmediata a supervisores con ubicación y registro automático del incidente.</p>
+      <a class="link" href="emergencia.html">Probar →</a>
+    </article>
+
+    <article class="card">
+      <h3>Capacitación</h3>
+      <p>Microcursos, evaluaciones y chat de práctica con IA. Reportes por trabajador.</p>
+      <a class="link" href="entrenamiento.html">Abrir →</a>
+    </article>
+
+    <article class="card">
+      <h3>Sensores</h3>
+      <p>Lecturas, umbrales y alertas. Historial y exportación para auditoría.</p>
+      <a class="link" href="sensores.html">Monitorear →</a>
+    </article>
+
+    <article class="card">
+      <h3>Reportes</h3>
+      <p>Incidentes, cuasi-accidentes y auditoría ISO 45001 en PDF con tu marca.</p>
+      <a class="link" href="reportes.html">Generar →</a>
+    </article>
+  </section>
+
+  <!-- KPI preview -->
+  <section class="kpi container">
+    <h2>Indicadores clave</h2>
+    <div class="kpi-grid">
+      <div class="kpi-item">
+        <span class="kpi-label">Incidentes hoy</span>
+        <span class="kpi-value">0</span>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">% Cumplimiento</span>
+        <span class="kpi-value">0%</span>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">Capacitaciones</span>
+        <span class="kpi-value">0</span>
+      </div>
+      <div class="kpi-item">
+        <span class="kpi-label">Alertas activas</span>
+        <span class="kpi-value">0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compliance -->
+  <section class="container checklist">
+    <h2>Auditoría ISO 45001</h2>
+    <ul class="tick">
+      <li>✔ Liderazgo y compromiso</li>
+      <li>✔ Identificación de peligros</li>
+      <li>✔ Gestión del cambio</li>
+      <li>✔ Respuesta a emergencias</li>
+    </ul>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <small>© <span id="y"></span> PRISMA — Seguridad e Higiene</small>
+      <nav class="footer-nav">
+        <a href="privacidad.html">Privacidad</a>
+        <a href="terminos.html">Términos</a>
+        <a href="contacto.html">Contacto</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- JS mínimo -->
+  <script>
+    // Año dinámico
+    document.getElementById('y').textContent = new Date().getFullYear();
+    // Toggle menú móvil
+    const btn = document.querySelector('.nav-toggle');
+    const list = document.querySelector('.nav-list');
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      list.classList.toggle('open');
+    });
+  </script>
+</body>
+</html>
