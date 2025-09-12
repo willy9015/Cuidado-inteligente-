@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>PRISMA — Seguridad Industrial · ISO 45001</title>
+  <meta name="description" content="PRISMA: seguridad inteligente con checklists, permisos, sensores, capacitación con IA y reportes ISO 45001."/>
+  <meta name="theme-color" content="#0b1f16"/>
+  <link rel="icon" href="logo-prisma.png"/>
+  <link rel="preload" href="logo-prisma.png" as="image"/>
+  <link rel="stylesheet" href="style.css"/>
+  <!-- Google Identity (opcional; coloca tu CLIENT_ID en app.js) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+  <!-- Splash estilo Netflix -->
+  <div id="splash" role="alert" aria-live="polite">
+    <img src="logo-prisma.png" alt="PRISMA" class="splash-logo"/>
+    <h1>PRISMA</h1>
+    <p>Seguridad inteligente</p>
+    <div class="loader" aria-hidden="true"></div>
+  </div>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <button id="btnMenu" class="icon-btn" aria-label="Abrir menú">☰</button>
+    <a class="brand" href="#/home" data-route>
+      <img src="logo-prisma.png" alt="Logo PRISMA" class="logo"/>
+      <div><strong>PRISMA</strong><small>Seguridad Industrial · ISO 45001</small></div>
+    </a>
+    <nav class="top-actions">
+      <button id="btnLang" class="chip">ES</button>
+      <button id="btnTheme" class="icon-btn" title="Tema">🌙</button>
+      <button id="btnLogin" class="chip primary">Ingresar</button>
+    </nav>
+  </header>
+
+  <!-- Drawer -->
+  <aside id="drawer" aria-label="Navegación">
+    <nav>
+      <a href="#/home" data-route>Inicio</a>
+      <a href="#/dashboard" data-route>Dashboard</a>
+      <a href="#/forms" data-route>Formularios</a>
+      <a href="#/training" data-route>Capacitación</a>
+      <a href="#/sensors" data-route>Sensores</a>
+      <a href="#/reports" data-route>Reportes</a>
+      <a href="#/messages" data-route>Mensajes</a>
+      <a href="#/emergency" data-route>Emergencia</a>
+      <hr/>
+      <a href="#/account" data-route>Cuenta</a>
+      <a href="#/logout" data-route class="danger">Salir</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main id="app" tabindex="-1">
+    <!-- HOME -->
+    <section id="view-home" class="view">
+      <div class="hero card glass">
+        <div class="hero-content">
+          <div>
+            <h1><span data-i18n="heroTitle">Seguridad inteligente para cero incidentes</span></h1>
+            <p class="muted" data-i18n="heroSub">
+              Checklists, permisos de trabajo, mapa de riesgos, botón de pánico, sensores y capacitación con IA en una sola plataforma 100% web y móvil.
+            </p>
+            <div class="row">
+              <a class="btn primary" href="#/dashboard" data-route data-i18n="openDashboard">Abrir Dashboard</a>
+              <a class="btn outline" href="#/training" data-route data-i18n="openTraining">Ir a Capacitación</a>
+            </div>
+            <div class="badges">
+              <span class="chip">ISO 45001</span>
+              <span class="chip">Offline-first</span>
+              <span class="chip">Export PDF/CSV</span>
+            </div>
+          </div>
+          <div class="kpi card">
+            <h3 data-i18n="kpiTitle">Indicadores clave</h3>
+            <div class="kpi-grid">
+              <div><b data-i18n="kpiInc">Incidentes hoy</b><span id="kpiIncidents">0</span></div>
+              <div><b data-i18n="kpiOk">% Cumplimiento</b><span id="kpiCompliance">92%</span></div>
+              <div><b data-i18n="kpiTrain">Capacitaciones</b><span id="kpiTrainings">18</span></div>
+            </div>
+            <canvas id="spark" height="90"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <a class="tile" href="#/emergency" data-route>
+          <div class="icon danger">⛑</div>
+          <div><b data-i18n="quickPanic">Botón de pánico (GPS)</b><p class="muted" data-i18n="quickPanicSub">Alerta inmediata con ubicación</p></div>
+        </a>
+        <a class="tile" href="#/training" data-route>
+          <div class="icon">🎧</div>
+          <div><b data-i18n="quickCourses">Microcursos con voz IA</b><p class="muted" data-i18n="quickCoursesSub">Cómic+voz y evaluación</p></div>
+        </a>
+        <a class="tile" href="#/sensors" data-route>
+          <div class="icon">🧪</div>
+          <div><b data-i18n="quickSensors">Sensores en tiempo real</b><p class="muted" data-i18n="quickSensorsSub">Lecturas y umbrales</p></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view">
+      <h2>Dashboard</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Incidentes últimos 30 días</h3>
+          <canvas id="chartIncidents" height="140"></canvas>
+        </div>
+        <div class="card">
+          <h3>Uso correcto de EPP (%)</h3>
+          <canvas id="chartPPE" height="140"></canvas>
+        </div>
+        <div class="card">
+          <h3>Capacitaciones</h3>
+          <ul id="trainList" class="list"></ul>
+        </div>
+        <div class="card">
+          <h3>Alertas</h3>
+          <ul id="alertList" class="list"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- FORMULARIOS (checklists básicos) -->
+    <section id="view-forms" class="view">
+      <h2>Formularios</h2>
+      <div class="card">
+        <form id="frmStop">
+          <h3>Auditoría STOP</h3>
+          <label><input type="checkbox" name="orden"/> Orden y limpieza</label>
+          <label><input type="checkbox" name="señal"/> Señalización correcta</label>
+          <label><input type="checkbox" name="epp"/> EPP adecuado</label>
+          <button class="btn primary" type="submit">Guardar</button>
+        </form>
+      </div>
+      <div class="card">
+        <form id="frmPermiso">
+          <h3>Permiso de trabajo</h3>
+          <label>Tarea <input name="tarea" required/></label>
+          <label>Riesgo <select name="riesgo"><option>Altura</option><option>Espacio confinado</option><option>Eléctrico</option></select></label>
+          <button class="btn" type="submit">Emitir QR</button>
+          <canvas id="qrCanvas" width="160" height="160" class="qr"></canvas>
+        </form>
+      </div>
+    </section>
+
+    <!-- CAPACITACIÓN -->
+    <section id="view-training" class="view">
+      <h2>Capacitación (Micro-cursos)</h2>
+      <div class="card">
+        <div id="coursePlayer" class="course">
+          <img id="courseImg" alt="Slide" />
+          <div class="course-bar">
+            <button id="prevSlide" class="icon-btn">⟵</button>
+            <div id="courseTitle" class="grow"></div>
+            <button id="nextSlide" class="icon-btn">⟶</button>
+            <button id="btnSpeak" class="chip">🔊</button>
+          </div>
+        </div>
+        <div class="row">
+          <button id="btnQuiz" class="btn outline">Evaluación</button>
+          <button id="btnCert" class="btn">Generar certificado</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SENSORES -->
+    <section id="view-sensors" class="view">
+      <h2>Sensores</h2>
+      <div class="card">
+        <form id="sensorForm" class="row-wrap">
+          <input name="nombre" placeholder="CO₂ / Temp / Ruido" required/>
+          <input name="unidad" placeholder="ppm / °C / dB" required/>
+          <input name="min" type="number" placeholder="Mín" required/>
+          <input name="max" type="number" placeholder="Máx" required/>
+          <button class="btn primary">Añadir</button>
+          <button id="btnExportSensors" class="btn outline" type="button">Exportar CSV</button>
+        </form>
+      </div>
+      <div class="card">
+        <h3>Lecturas</h3>
+        <ul id="sensorList" class="list"></ul>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section id="view-reports" class="view">
+      <h2>Reportes</h2>
+      <div class="card">
+        <button id="btnExportInc" class="btn">Exportar incidentes (CSV)</button>
+        <button id="btnPdf" class="btn outline">Generar PDF (demo)</button>
+        <ul id="incList" class="list"></ul>
+      </div>
+    </section>
+
+    <!-- MENSAJES -->
+    <section id="view-messages" class="view">
+      <h2>Mensajes</h2>
+      <div class="card">
+        <form id="msgForm" class="row-wrap">
+          <input name="texto" placeholder="Mensaje a equipo…" required/>
+          <button class="btn primary">Enviar</button>
+        </form>
+        <ul id="msgList" class="list"></ul>
+      </div>
+    </section>
+
+    <!-- EMERGENCIA -->
+    <section id="view-emergency" class="view">
+      <h2>Emergencia</h2>
+      <div class="card">
+        <input id="panicNote" placeholder="Describe la emergencia (opcional)"/>
+        <div class="row">
+          <button id="btnPanic" class="btn danger big">⛑ Activar emergencia</button>
+          <button id="btnShareLast" class="btn outline">Compartir último</button>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Incidentes registrados</h3>
+        <table class="table">
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Ubicación</th><th>Severidad</th></tr></thead>
+          <tbody id="tblIncidents"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- CUENTA -->
+    <section id="view-account" class="view">
+      <h2>Cuenta</h2>
+      <div class="card">
+        <form id="authForm" class="grid-2">
+          <label>Email <input type="email" name="email" required/></label>
+          <label>Contraseña <input type="password" name="pass" required/></label>
+          <button class="btn primary">Iniciar sesión</button>
+          <div id="gButton" class="g-login-placeholder"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toasts -->
+  <div id="toasts" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
